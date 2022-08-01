@@ -17,6 +17,7 @@
 #ifndef SRC_SCHEMA_SCHEMA_ADAPTER_H_
 #define SRC_SCHEMA_SCHEMA_ADAPTER_H_
 
+#include <memory>
 #include <string>
 #include <vector>
 #include "base/status.h"
@@ -42,13 +43,17 @@ class SchemaAdapter {
 
     static bool ConvertSchema(const PBSchema& schema, ::hybridse::vm::Schema* output);
 
+    static std::shared_ptr<::hybridse::sdk::Schema> ConvertSchema(const PBSchema& schema);
+
     static bool ConvertSchema(const ::hybridse::vm::Schema& hybridse_schema, PBSchema* schema);
 
     static bool ConvertType(hybridse::node::DataType hybridse_type, openmldb::type::DataType* type);
 
-    static bool ConvertType(hybridse::type::Type hybridse_type, openmldb::type::DataType* oepnmldb_type);
+    static bool ConvertType(openmldb::type::DataType type, hybridse::node::DataType* hybridse_type);
 
-    static bool ConvertType(openmldb::type::DataType oepnmldb_type, hybridse::type::Type* hybridse_type);
+    static bool ConvertType(hybridse::type::Type hybridse_type, openmldb::type::DataType* openmldb_type);
+
+    static bool ConvertType(openmldb::type::DataType openmldb_type, hybridse::type::Type* hybridse_type);
 
     static bool ConvertType(hybridse::sdk::DataType type, hybridse::type::Type *cased_type);
 

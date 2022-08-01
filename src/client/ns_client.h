@@ -57,7 +57,7 @@ class NsClient : public Client {
 
     bool Use(const std::string& db, std::string& msg);  // NOLINT
 
-    bool CreateDatabase(const std::string& db, std::string& msg);  // NOLINT
+    bool CreateDatabase(const std::string& db, std::string& msg, bool if_not_exists = false);  // NOLINT
 
     bool ShowDatabase(std::vector<std::string>* dbs,
                       std::string& msg);  // NOLINT
@@ -99,6 +99,7 @@ class NsClient : public Client {
                        std::string& msg);  // NOLINT
 
     bool CreateTable(const ::openmldb::nameserver::TableInfo& table_info,
+                     const bool create_if_not_exist,
                      std::string& msg);  // NOLINT
 
     bool DropTable(const std::string& name, std::string& msg);  // NOLINT
@@ -216,7 +217,7 @@ class NsClient : public Client {
                   std::vector<openmldb::common::ColumnDesc>* cols,
                   std::string& msg);  // NOLINT
 
-    base::Status AddMultiIndex(const std::string& table_name,
+    base::Status AddMultiIndex(const std::string& db, const std::string& table_name,
             const std::vector<::openmldb::common::ColumnKey>& column_keys);
 
     bool DeleteIndex(const std::string& table_name, const std::string& idx_name,
@@ -230,10 +231,16 @@ class NsClient : public Client {
 
     base::Status CreateProcedure(const ::openmldb::api::ProcedureInfo& sp_info, uint64_t request_timeout);
 
+    base::Status CreateFunction(const ::openmldb::common::ExternalFun& fun);
+
+    base::Status DropFunction(const std::string& name, bool if_exists);
+
+    base::Status ShowFunction(const std::string& name, std::vector<::openmldb::common::ExternalFun>* fun_vec);
+
     bool ShowProcedure(const std::string& db_name, const std::string& sp_name, std::vector<api::ProcedureInfo>* infos,
                        std::string* msg);
 
-    bool UpdateOfflineTableInfo(const nameserver::TableInfo& table_info);
+    base::Status UpdateOfflineTableInfo(const nameserver::TableInfo& table_info);
 
  private:
     ::openmldb::RpcClient<::openmldb::nameserver::NameServer_Stub> client_;

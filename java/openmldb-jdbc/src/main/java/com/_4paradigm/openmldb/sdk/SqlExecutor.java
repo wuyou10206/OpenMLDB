@@ -58,6 +58,8 @@ public interface SqlExecutor {
 
     PreparedStatement getInsertPreparedStmt(String db, String sql) throws SQLException;
 
+    PreparedStatement getDeletePreparedStmt(String db, String sql) throws SQLException;
+
     PreparedStatement getRequestPreparedStmt(String db, String sql) throws SQLException;
 
     PreparedStatement getPreparedStatement(String db, String sql) throws SQLException;
@@ -76,6 +78,8 @@ public interface SqlExecutor {
     ProcedureInfo showProcedure(String dbName, String proName) throws SQLException;
 
     NS.TableInfo getTableInfo(String db, String table) throws SQLException;
+
+    List<String> getTableNames(String db);
 
     void close();
 }

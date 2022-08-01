@@ -51,13 +51,13 @@ class SDKTableHandler : public ::hybridse::vm::TableHandler {
     const ::hybridse::vm::IndexHint& GetIndex() override { return index_hint_; }
 
     std::unique_ptr<::hybridse::codec::RowIterator> GetIterator() override {
-        return std::move(std::unique_ptr<::hybridse::codec::RowIterator>());
+        return std::unique_ptr<::hybridse::codec::RowIterator>();
     }
 
     ::hybridse::codec::RowIterator* GetRawIterator() override { return nullptr; }
 
     std::unique_ptr<::hybridse::codec::WindowIterator> GetWindowIterator(const std::string& idx_name) override {
-        return std::move(std::unique_ptr<::hybridse::codec::WindowIterator>());
+        return std::unique_ptr<::hybridse::codec::WindowIterator>();
     }
 
     const uint64_t GetCount() override { return cnt_; }
@@ -94,7 +94,6 @@ class SDKTableHandler : public ::hybridse::vm::TableHandler {
     std::string name_;
     std::string db_;
     ::hybridse::vm::Types types_;
-    ::hybridse::vm::IndexList index_list_;
     ::hybridse::vm::IndexHint index_hint_;
     uint64_t cnt_;
     std::shared_ptr<TableClientManager> table_client_manager_;
@@ -123,6 +122,8 @@ class SDKCatalog : public ::hybridse::vm::Catalog {
     bool IndexSupport() override { return true; }
 
     std::shared_ptr<TabletAccessor> GetTablet() const;
+
+    std::vector<std::shared_ptr<TabletAccessor>> GetAllTablet() const;
 
     std::shared_ptr<::hybridse::sdk::ProcedureInfo> GetProcedureInfo(const std::string& db,
                                                                      const std::string& sp_name) override;
