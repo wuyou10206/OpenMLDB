@@ -31,11 +31,6 @@
             <artifactId>openmldb-deploy</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-testng</artifactId>
-            <version>2.12.1</version>
-        </dependency>
         <!--database-->
         <dependency>
             <groupId>org.xerial</groupId>
