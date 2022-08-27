@@ -2,10 +2,12 @@ package com._4paradigm.openmldb.rtidb_client.tmp;
 
 import com._4paradigm.openmldb.rtidb_client.common.OpenMLDBTest;
 import com._4paradigm.openmldb.rtidb_client.util.DataUtil;
+import com._4paradigm.rtidb.ns.NS;
 import com._4paradigm.rtidb.tablet.Tablet;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class TestGet extends OpenMLDBTest {
     @Test
@@ -16,5 +18,11 @@ public class TestGet extends OpenMLDBTest {
         Object[] actualGetRow = masterTableAsyncClient.get(tableName, "bb", indexName, 1590738989002L, "c7", Tablet.GetType.kSubKeyEq).getRow();
         DataUtil.convertData(actualGetRow);
         System.out.println("actualGetRow = " + Arrays.toString(actualGetRow));
+    }
+
+    @Test
+    public void test2() throws Exception {
+        List<NS.TableInfo> test_memory = masterNsc.showTable("test_memory");
+        System.out.println("test_memory = " + test_memory);
     }
 }
