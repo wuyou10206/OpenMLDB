@@ -9,6 +9,7 @@ import com._4paradigm.rtidb.ns.NS;
 import com._4paradigm.rtidb.tablet.Tablet;
 import io.qameta.allure.Description;
 import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -21,7 +22,7 @@ import java.util.*;
 /**
  * Created by zhangguanglin on 2019/9/25.
  */
-@Log4j
+@Slf4j
 public class PutGetScanTraverseTestAsync extends OpenMLDBTest {
     @Description("索引表-put-get-scan")
     @Test(dataProvider = "storageModeData")
@@ -778,5 +779,73 @@ public class PutGetScanTraverseTestAsync extends OpenMLDBTest {
         DataUtil.convertData(scanActualRows);
         Assert.assertEquals(scanActualRows.size(),1);
         Assert.assertEquals(scanActualRows.get(0), dataList.get(0));
+    }
+    @Description("空字符串-put-get-scan")
+    @Test(dataProvider = "storageModeData")
+    public void testEmptyStringData(String storageMode) throws Exception {
+        String tableName = tableNamePrefix + RandomStringUtils.randomAlphabetic(8);
+        String tableDDL = "create table %s(c1 string,c2 smallint,c3 int,c4 bigint,c5 float,c6 double,c7 timestamp,c8 date,c9 bool," +
+                "index(key=(c1),ts=c7))options(partitionnum=2,replicanum=3,storage_mode='%s');";
+        tableDDL = String.format(tableDDL, tableName, storageMode);
+        sdkClient.execute(tableDDL);
+        tableNameList.add(tableName);
+
+        short s = 1;
+        Date date = Date.valueOf("2020-05-01");
+        Timestamp timestamp = new Timestamp(1590738989000L);
+        Object[] data = new Object[]{"", s, 2, 3L, 1.1F, 2.1, timestamp, date, true};
+        masterTableAsyncClient.put(tableName, data);
+        Thread.sleep(5*1000);
+        NS.TableInfo tableInfo = masterNsc.showTable(tableName).get(0);
+        String indexName = tableInfo.getColumnKey(0).getIndexName();
+        int tid = tableInfo.getTid();
+        log.info("indexName:" + indexName);
+        log.info("tid:" + tid);
+        Object[] actualRow = masterTableAsyncClient.get(tableName, "", indexName).getRow();
+        log.info("actualRow:{}",Arrays.toString(actualRow));
+        // DateTime -> Timestamp
+        DataUtil.convertData(actualRow);
+        Assert.assertEquals(actualRow, data);
+
+        KvIterator scanIterator = masterTableAsyncClient.scan(tableName, "", indexName, 10).get();
+        List<Object[]> scanActualRows = KvIteratorUtil.kvIteratorToListForSchema(scanIterator);
+        log.info("scanActualRows:{}",Arrays.toString(scanActualRows.get(0)));
+        Assert.assertEquals(scanActualRows.size(),1);
+        DataUtil.convertData(scanActualRows);
+        Assert.assertEquals(scanActualRows.get(0), data);
+    }
+    @Description("null-put-get-scan")
+    @Test(dataProvider = "storageModeData")
+    public void testNullData(String storageMode) throws Exception {
+        String tableName = tableNamePrefix + RandomStringUtils.randomAlphabetic(8);
+        String tableDDL = "create table %s(c1 string,c2 smallint,c3 int,c4 bigint,c5 float,c6 double,c7 timestamp,c8 date,c9 bool," +
+                "index(key=(c1),ts=c7))options(partitionnum=2,replicanum=3,storage_mode='%s');";
+        tableDDL = String.format(tableDDL, tableName, storageMode);
+        sdkClient.execute(tableDDL);
+        tableNameList.add(tableName);
+
+        short s = 1;
+        Date date = Date.valueOf("2020-05-01");
+        Timestamp timestamp = new Timestamp(1590738989000L);
+        Object[] data = new Object[]{null, s, 2, 3L, 1.1F, 2.1, timestamp, date, true};
+        masterTableAsyncClient.put(tableName, data);
+        Thread.sleep(5*1000);
+        NS.TableInfo tableInfo = masterNsc.showTable(tableName).get(0);
+        String indexName = tableInfo.getColumnKey(0).getIndexName();
+        int tid = tableInfo.getTid();
+        log.info("indexName:" + indexName);
+        log.info("tid:" + tid);
+        Object[] actualRow = masterTableAsyncClient.get(tableName, null, indexName).getRow();
+        log.info("actualRow:{}",Arrays.toString(actualRow));
+        // DateTime -> Timestamp
+        DataUtil.convertData(actualRow);
+        Assert.assertEquals(actualRow, data);
+
+        KvIterator scanIterator = masterTableAsyncClient.scan(tableName, null, indexName, 10).get();
+        List<Object[]> scanActualRows = KvIteratorUtil.kvIteratorToListForSchema(scanIterator);
+        log.info("scanActualRows:{}",Arrays.toString(scanActualRows.get(0)));
+        Assert.assertEquals(scanActualRows.size(),1);
+        DataUtil.convertData(scanActualRows);
+        Assert.assertEquals(scanActualRows.get(0), data);
     }
 }
