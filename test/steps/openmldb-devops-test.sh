@@ -95,8 +95,10 @@ mvn clean install -Dmaven.test.skip=true
 # run case
 cd "${ROOT_DIR}"/test/integration-test/openmldb-test-java/openmldb-devops-test || exit
 mvn clean test -e -U -Dsuite=test_suite/"${CASE_XML}"
-
-if [[ "${TEST_TYPE}" == "upgrade" && $? == 0 ]]; then
+if [[ $? != 0 ]]; then
+  exit 1
+fi
+if [[ "${TEST_TYPE}" == "upgrade" ]]; then
   if [[ "${TABLE_STORAGE_MODE}" == "memory" ]]; then
     SDK_CASE_XML="test_cluster.xml"
   else
