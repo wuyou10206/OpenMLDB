@@ -1,5 +1,6 @@
 package com._4paradigm.openmldb.rtidb_client.common;
 
+import com._4paradigm.rtidb.common.Common;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.DataProvider;
 
@@ -11,9 +12,15 @@ import java.lang.reflect.Method;
  */
 @Slf4j
 public class RtidbDataProvider {
-
-    @DataProvider(name="storageModeData")
-    public Object[][] storageModeData(Method method) {
+    @DataProvider()
+    public Object[][] formatVersion(Method method) {
+        return new Object[][]{
+                new Object[]{0},
+                new Object[]{1}
+        };
+    }
+    @DataProvider(name="storageModeDataByString")
+    public Object[][] storageModeDataByString(Method method) {
         return new Object[][]{
                 new Object[]{"memory"},
                 new Object[]{"ssd"},
@@ -27,4 +34,21 @@ public class RtidbDataProvider {
                 new Object[]{"hdd"}
         };
     }
+    @DataProvider(name="storageModeData")
+    public Object[][] storageModeData(Method method) {
+        return new Object[][]{
+                new Object[]{Common.StorageMode.kMemory},
+                new Object[]{Common.StorageMode.kSSD},
+                new Object[]{Common.StorageMode.kHDD}
+        };
+    }
+
+    @DataProvider()
+    public Object[][] storageModeDataNoMemory(Method method) {
+        return new Object[][]{
+                new Object[]{Common.StorageMode.kSSD},
+                new Object[]{Common.StorageMode.kHDD}
+        };
+    }
+
 }

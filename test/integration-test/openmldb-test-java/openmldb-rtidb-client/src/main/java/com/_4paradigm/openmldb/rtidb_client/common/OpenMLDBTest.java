@@ -76,7 +76,7 @@ public class OpenMLDBTest extends RtidbDataProvider{
                     .deployType(OpenMLDBDeployType.CLUSTER)
                     .basePath("/home/zhaowei01/openmldb-auto-test/tmp")
                     .openMLDBPath("/home/zhaowei01/openmldb-auto-test/tmp/openmldb-ns-1/bin/openmldb")
-                    .zk_cluster("172.24.4.55:30008")
+                    .zk_cluster("172.24.4.55:30000")
                     .zk_root_path("/openmldb")
                     .nsNum(2).tabletNum(3)
                     .nsEndpoints(Lists.newArrayList("172.24.4.55:30004", "172.24.4.55:30005"))
@@ -91,12 +91,12 @@ public class OpenMLDBTest extends RtidbDataProvider{
             OpenMLDBGlobalVar.env = caseEnv;
         }
         log.info("openMLDB global var env: {}", env);
-        OpenMLDBClient openMLDBClient = new OpenMLDBClient(OpenMLDBGlobalVar.mainInfo.getZk_cluster(), OpenMLDBGlobalVar.mainInfo.getZk_root_path());
-        executor = openMLDBClient.getExecutor();
-        log.info("executor:{}",executor);
-        sdkClient = SDKClient.of(executor);
-        sdkClient.setOnline();
-        sdkClient.createAndUseDB("default_db");
+//        OpenMLDBClient openMLDBClient = new OpenMLDBClient(OpenMLDBGlobalVar.mainInfo.getZk_cluster(), OpenMLDBGlobalVar.mainInfo.getZk_root_path());
+//        executor = openMLDBClient.getExecutor();
+//        log.info("executor:{}",executor);
+//        sdkClient = SDKClient.of(executor);
+//        sdkClient.setOnline();
+//        sdkClient.createAndUseDB("default_db");
         RTIDBClient masterRtidbClient = new RTIDBClient(OpenMLDBGlobalVar.mainInfo.getZk_cluster(),OpenMLDBGlobalVar.mainInfo.getZk_root_path());
         masterTableSyncClient = masterRtidbClient.getTableSyncClient();
         masterNsc = masterRtidbClient.getNsc();
@@ -105,8 +105,17 @@ public class OpenMLDBTest extends RtidbDataProvider{
 
     }
 
-    @AfterClass
+//    @AfterClass
     public void ARemoveTable() {
-
+        for (String tableName : tableNameList){
+            if (tableName != null){
+                boolean ok = masterNsc.dropTable(tableName);
+                if(ok) {
+                    log.info("删除表:"+tableName);
+                }else {
+                    log.info("delete table fail:"+tableName);
+                }
+            }
+        }
     }
 }

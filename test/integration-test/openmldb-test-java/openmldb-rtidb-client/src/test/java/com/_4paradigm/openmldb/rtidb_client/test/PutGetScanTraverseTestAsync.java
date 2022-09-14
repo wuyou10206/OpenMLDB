@@ -8,7 +8,6 @@ import com._4paradigm.rtidb.client.*;
 import com._4paradigm.rtidb.ns.NS;
 import com._4paradigm.rtidb.tablet.Tablet;
 import io.qameta.allure.Description;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.Assert;
@@ -25,7 +24,7 @@ import java.util.*;
 @Slf4j
 public class PutGetScanTraverseTestAsync extends OpenMLDBTest {
     @Description("索引表-put-get-scan")
-    @Test(dataProvider = "storageModeData")
+    @Test(dataProvider = "storageModeDataByString")
     public void testIndexTable(String storageMode) throws Exception{
         String tableName = tableNamePrefix+ RandomStringUtils.randomAlphabetic(8);
         String tableDDL = "create table %s(c1 string,c2 smallint,c3 int,c4 bigint,c5 float,c6 double,c7 timestamp,c8 date,c9 bool," +
@@ -306,7 +305,7 @@ public class PutGetScanTraverseTestAsync extends OpenMLDBTest {
     }
 
     @Description("组合索引表-get-scan")
-    @Test(dataProvider = "storageModeData")
+    @Test(dataProvider = "storageModeDataByString")
     public void testUnionIndexTable(String storageMode) throws Exception {
         String tableName = tableNamePrefix + RandomStringUtils.randomAlphabetic(8);
         String tableDDL = "create table %s(c1 string,c2 smallint,c3 int,c4 bigint,c5 float,c6 double,c7 timestamp,c8 date,c9 bool," +
@@ -424,7 +423,7 @@ public class PutGetScanTraverseTestAsync extends OpenMLDBTest {
         }
     }
     @Description("不指定索引-put-get-scan")
-    @Test(dataProvider = "storageModeData")
+    @Test(dataProvider = "storageModeDataByString")
     public void testNotIndexTable(String storageMode) throws Exception{
         String tableName = tableNamePrefix+ RandomStringUtils.randomAlphabetic(8);
         String tableDDL = "create table %s(c1 string,c2 smallint,c3 int,c4 bigint,c5 float,c6 double,c7 timestamp,c8 date,c9 bool)options(storage_mode='%s');";
@@ -781,7 +780,7 @@ public class PutGetScanTraverseTestAsync extends OpenMLDBTest {
         Assert.assertEquals(scanActualRows.get(0), dataList.get(0));
     }
     @Description("空字符串-put-get-scan")
-    @Test(dataProvider = "storageModeData")
+    @Test(dataProvider = "storageModeDataByString")
     public void testEmptyStringData(String storageMode) throws Exception {
         String tableName = tableNamePrefix + RandomStringUtils.randomAlphabetic(8);
         String tableDDL = "create table %s(c1 string,c2 smallint,c3 int,c4 bigint,c5 float,c6 double,c7 timestamp,c8 date,c9 bool," +
@@ -815,7 +814,7 @@ public class PutGetScanTraverseTestAsync extends OpenMLDBTest {
         Assert.assertEquals(scanActualRows.get(0), data);
     }
     @Description("null-put-get-scan")
-    @Test(dataProvider = "storageModeData")
+    @Test(dataProvider = "storageModeDataByString")
     public void testNullData(String storageMode) throws Exception {
         String tableName = tableNamePrefix + RandomStringUtils.randomAlphabetic(8);
         String tableDDL = "create table %s(c1 string,c2 smallint,c3 int,c4 bigint,c5 float,c6 double,c7 timestamp,c8 date,c9 bool," +
