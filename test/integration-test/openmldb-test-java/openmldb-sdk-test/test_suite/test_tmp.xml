@@ -10,11 +10,11 @@
 <!--            <package name="com._4paradigm.openmldb.java_sdk_test.cluster.v040"/>-->
 <!--        </packages>-->
         <classes>
-            <class name="com._4paradigm.openmldb.java_sdk_test.cluster.sql_test.LongWindowTest">
-                <methods>
-                    <include name="testLongWindow" />
-                </methods>
-            </class>
+            <class name="com._4paradigm.openmldb.java_sdk_test.cluster.sql_test.SelectTest"></class>
+            <class name="com._4paradigm.openmldb.java_sdk_test.cluster.sql_test.LastJoinTest"></class>
+            <class name="com._4paradigm.openmldb.java_sdk_test.cluster.sql_test.WindowTest"></class>
+            <class name="com._4paradigm.openmldb.java_sdk_test.cluster.sql_test.MultiDBTest"></class>
+            <class name="com._4paradigm.openmldb.java_sdk_test.cluster.sql_test.LongWindowTest"></class>
         </classes>
     </test>
     <listeners>
