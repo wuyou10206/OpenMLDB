@@ -762,7 +762,7 @@ public class AddIndexTest extends OpenMLDBTest {
         Assert.assertTrue(indexNames.contains(indexName));
     }
 
-    // 创建表-put数据-添加索引-根据新索引get/scan/traverse-在put数据-根据新索引get/scan/traverse
+    // 创建表-put数据-添加列-在新列上添加索引-put数据-make snapshot-add replica-change leader-get scan
     @Test
     public void testAddColumnAddIndex() throws Exception {
         String tableName = tableNamePrefix+ RandomStringUtils.randomAlphabetic(8);
@@ -811,24 +811,6 @@ public class AddIndexTest extends OpenMLDBTest {
         List<String> indexNames = RtidbUtil.getIndexName(masterNsc,tableName);
         Assert.assertTrue(indexNames.contains(indexName));
         masterClusterClient.refreshRouteTable();
-
-//        Object[] actualRow = masterTableSyncClient.getRow(tableName, "1", indexName,0);
-//        Assert.assertEquals(String.valueOf(actualRow[1]),"1");
-//        KvIterator scanIterator = masterTableSyncClient.scan(tableName, "1", indexName, 0,0);
-//        List<Object[]> scanActualRows = KvIteratorUtil.kvIteratorToListForSchema(scanIterator);
-//        for(Object[] scanRow:scanActualRows) {
-//            Assert.assertEquals(String.valueOf(scanRow[1]), "1");
-//        }
-//        Assert.assertEquals(scanActualRows.size(),2);
-//        KvIterator it = masterTableSyncClient.traverse(tableName, indexName);
-//        Set<String>  traverseResultSet = new HashSet<>();
-//        while (it.valid()) {
-//            // 一次迭代只能调用一次getDecodedValue
-//            row = it.getDecodedValue();
-//            traverseResultSet.add(Arrays.toString(row));
-//            it.next();
-//        }
-//        Assert.assertEquals(traverseResultSet,putSet);
 
         long timestamp2 = System.currentTimeMillis();
 //        Set<String> putSet2 = new HashSet<>();
