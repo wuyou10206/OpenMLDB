@@ -26,7 +26,7 @@ public class TestCompress extends OpenMLDBTest {
                 .setName(tableName)
                 .addColumnDescV1(columnDesc1).addColumnDescV1(columnDesc2).addColumnDescV1(columnDesc3).addColumnDescV1(columnDesc4)
                 .addColumnKey(columnKey1)
-                .setReplicaNum(2).setPartitionNum(2)
+                .setReplicaNum(1).setPartitionNum(1)
                 .setCompressType(NS.CompressType.kSnappy)
                 .build();
         log.info("table info:"+tableInfo);
