@@ -15,16 +15,24 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
 
-        <rtidb.version>1.6.3.1-RELEASE</rtidb.version>
+        <rtidb.version>1.6.4.1-OPENMLDB-SNAPSHOT</rtidb.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>4pd-nexus-public</id>
+            <name>4Paradigm nexus maven public</name>
+            <url>https://nexus.4pd.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com._4paradigm</groupId>
             <artifactId>rtidb-client</artifactId>
             <version>${rtidb.version}</version>
-            <scope>system</scope>
-            <systemPath>/Users/zhaowei/Downloads/rtidb-client-1.6.3.1-RELEASE.jar</systemPath>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>/Users/zhaowei/Downloads/rtidb-client-1.6.3.1-RELEASE.jar</systemPath>-->
         </dependency>
 
         <dependency>

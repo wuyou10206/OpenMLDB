@@ -1,7 +1,9 @@
 package com._4paradigm.openmldb.rtidb_client.test;
 
 import com._4paradigm.openmldb.rtidb_client.common.OpenMLDBTest;
+import com._4paradigm.openmldb.rtidb_client.util.KvIteratorUtil;
 import com._4paradigm.openmldb.rtidb_client.util.RtidbUtil;
+import com._4paradigm.rtidb.client.KvIterator;
 import com._4paradigm.rtidb.common.Common;
 import com._4paradigm.rtidb.ns.NS;
 import lombok.extern.slf4j.Slf4j;
@@ -75,12 +77,69 @@ public class TestCompress extends OpenMLDBTest {
         Assert.assertTrue(masterTableSyncClient.put(tableName, row2));
         putSet.add(Arrays.toString(row2));
         // make snapshot
-
+        // makesnapshot auto_UUZpHdyn 0
         // add replica
+        // confset auto_failover false
+        // addreplica auto_UUZpHdyn 0 172.24.4.55:30001
 
         // change leader
-
+        // changeleader auto_UUZpHdyn 0 172.24.4.55:30001
+        // recoverendpoint  172.24.4.55:30003
         // get scan
 
+    }
+    @Test
+    public void testGetScan() throws Exception {
+        String tableName = "auto_UUZpHdyn";
+        Object[] getRow = masterTableSyncClient.getRow(tableName,"card1","card_ck",0);
+        Assert.assertEquals(getRow[3],1665479401866L);
+        System.out.println(Arrays.toString(getRow));
+        KvIterator scanIterator = masterTableSyncClient.scan(tableName, "card1", "card_ck", 0,0);
+        Assert.assertEquals(scanIterator.getCount(),2);
+        while (scanIterator.valid()) {
+            // 一次迭代只能调用一次getDecodedValue
+            Object[] values = scanIterator.getDecodedValue();
+            System.out.println(Arrays.toString(values));
+            scanIterator.next();
+        }
+
+        getRow = masterTableSyncClient.getRow(tableName,"c11","c1_ck",0);
+        Assert.assertEquals(getRow[3],1665479412206L);
+        System.out.println(Arrays.toString(getRow));
+        scanIterator = masterTableSyncClient.scan(tableName, "c11", "c1_ck", 0,0);
+        Assert.assertEquals(scanIterator.getCount(),2);
+        while (scanIterator.valid()) {
+            // 一次迭代只能调用一次getDecodedValue
+            Object[] values = scanIterator.getDecodedValue();
+            System.out.println(Arrays.toString(values));
+            scanIterator.next();
+        }
+    }
+    @Test
+    public void testGetScanAsync() throws Exception {
+        String tableName = "auto_UUZpHdyn";
+        Object[] getRow = masterTableAsyncClient.get(tableName,"card1","card_ck",0).getRow();
+        Assert.assertEquals(getRow[3],1665479401866L);
+        System.out.println(Arrays.toString(getRow));
+        KvIterator scanIterator = masterTableAsyncClient.scan(tableName, "card1", "card_ck", 0,0).get();
+        Assert.assertEquals(scanIterator.getCount(),2);
+        while (scanIterator.valid()) {
+            // 一次迭代只能调用一次getDecodedValue
+            Object[] values = scanIterator.getDecodedValue();
+            System.out.println(Arrays.toString(values));
+            scanIterator.next();
+        }
+
+        getRow = masterTableAsyncClient.get(tableName,"c11","c1_ck",0).getRow();
+        Assert.assertEquals(getRow[3],1665479412206L);
+        System.out.println(Arrays.toString(getRow));
+        scanIterator = masterTableAsyncClient.scan(tableName, "c11", "c1_ck", 0,0).get();
+        Assert.assertEquals(scanIterator.getCount(),2);
+        while (scanIterator.valid()) {
+            // 一次迭代只能调用一次getDecodedValue
+            Object[] values = scanIterator.getDecodedValue();
+            System.out.println(Arrays.toString(values));
+            scanIterator.next();
+        }
     }
 }
